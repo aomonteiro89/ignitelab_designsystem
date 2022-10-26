@@ -1,13 +1,27 @@
-import { Heading } from './components/Heading';
-import { Logo } from './Logo';
-import { Text } from './components/Text';
-import './styles/global.css';
-import { TextInput } from './components/TextInput';
+import { FormEvent, useState } from "react";
+import { Button } from "../components/Button";
+import { Checkbox } from "../components/Checkbox";
+import { Heading } from "../components/Heading";
+import { TextInput } from "../components/TextInput";
+import { Logo } from "../Logo";
+import { Text } from "../components/Text";
 import { Envelope, Lock } from 'phosphor-react'
-import { Checkbox } from './components/Checkbox';
-import { Button } from './components/Button';
+import axios from 'axios';
 
-export function App() {
+export function SignIn() {
+  const [isUserSignedIn, setIsUserSignedIn] = useState(false)
+
+  async function handleSignIn(event: FormEvent) {
+    event.preventDefault();
+
+    await axios.post('/sessions', {
+      email: 'aom.developer@outlook.com',
+      password: '12345678',
+    })
+
+    setIsUserSignedIn(true);
+  }
+
   return (
     <div className='w-screen h-screen bg-gray-900 flex flex-col items-center justify-center text-gray-100'>
       <header className='flex flex-col gap-4 items-center'>
@@ -21,7 +35,9 @@ export function App() {
       </Text>
       </header>
 
-      <form className='flex flex-col gap-4 items-stretch w-full max-w-sm mt-10'>
+      <form onSubmit={handleSignIn} className='flex flex-col gap-4 items-stretch w-full max-w-sm mt-10'>
+        { isUserSignedIn && <Text>Login Realizado!</Text> }
+
         <label htmlFor="email" className='flex flex-col gap-3'>          
           <Text className='font-semibold'>Endereço de e-mail</Text>
           <TextInput.Root>
